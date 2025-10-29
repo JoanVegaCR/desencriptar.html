@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decodificador MSJ_SNT</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 2rem;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        h1 {
+            border-bottom: 2px solid #0078d4;
+            padding-bottom: 8px;
+            color: #005a9e;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box; /* Para que el padding no afecte el ancho */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        #resultado {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #2a8a2a;
+            word-wrap: break-word; /* Para que el texto largo no se salga */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Decodificador MSJ_SNT</h1>
+        <p>Ingresa el código encriptado (columna MSJ_SNT):</p>
+        
+        <label for="codigoInput">Código:</label>
+        <input type="text" id="codigoInput" placeholder="Pega el código aquí...">
+        
+        <button id="btnProcesar">Procesar</button>
+        
+        <h3>Resultado:</h3>
+        <code id="resultado"></code>
+    </div>
+
+    <script>
+        // 1. Seleccionar los elementos del DOM
+        const input = document.getElementById('codigoInput');
+        const boton = document.getElementById('btnProcesar');
+        const output = document.getElementById('resultado');
+
+        // 2. Crear la función de decodificación
+        function decodificar() {
+            const textoOriginal = input.value;
+
+            // Validar que haya texto
+            if (textoOriginal.length < 27) { // 9 + 7 + 6 + 5 = 27
+                output.style.color = "red";
+                output.textContent = "Error: El código es demasiado corto.";
+                return;
+            }
+
+            // Aplicar tus reglas:
+            // 1. Se quitan los primeros 9 caracteres (índice 0 al 8)
+            // 2. Guardar los siguientes 7 caracteres (índice 9 al 15)
+            const part1 = textoOriginal.substring(9, 16); 
+            
+            // 3. Borrar los siguientes 6 caracteres (índice 16 al 21)
+            // 4. Guardar los siguientes 5 caracteres (índice 22 al 26)
+            const part2 = textoOriginal.substring(22, 27);
+
+            // 5. Borrar el resto
+            
+            const resultadoFinal = part1 + part2;
+
+            // Mostrar el resultado
+            output.style.color = "#2a8a2a"; // Verde
+            output.textContent = resultadoFinal;
+        }
+
+        // 3. Asignar la función al clic del botón
+        boton.addEventListener('click', decodificar);
+
+        // Opcional: Procesar también al presionar Enter en el input
+        input.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                decodificar();
+            }
+        });
+
+        // Ejemplo para probar:
+        // input.value = "02000015430651080000082503200130268250";
+        // decodificar(); // Debería dar "306510825032"
+    </script>
+
+</body>
+</html>
